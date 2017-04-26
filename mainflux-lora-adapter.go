@@ -21,6 +21,12 @@ import (
 
 var usageStr = `
 Usage: maiflux-lora-adapter [options]
+loraserver Options:
+    -s, --lora-server                loraserver address (Default: 0.0.0.0)
+    -sp, --lora-server-port          loraserver port number (Default: 1883)
+MainfluxDB Options:
+    -m, --mainflux-server            MainfluxDB address (Default: 0.0.0.0)
+    -mp, --mainflux-server-port      MainfluxDB port number (Default: 1883)
 Logging Options:
     -l, --log <file>                 File to redirect log output
 Common Options:
@@ -29,7 +35,7 @@ Common Options:
 `
 
 const (
-        Version string = "0.1"
+        Version string = "0.1.2"
 )
 
 // usage will print out the flag options for the server.
@@ -48,15 +54,21 @@ func main() {
 
         // Config
         cfg = Config{
-                MQTTMainfluxHost: "0.0.0.0",
-                MQTTMainfluxPort: 1883,
-                MQTTLoraHost:     "0.0.0.0",
-                MQTTLoraPort:     1883,
         }
 
         var showVersion bool
 
         // Parse flags
+        flag.StringVar(&cfg.MQTTLoraHost, "s", "0.0.0.0", "loraserver address.")
+        flag.StringVar(&cfg.MQTTLoraHost, "lora-server", "0.0.0.0", "loraserver address.")
+        flag.IntVar(&cfg.MQTTLoraPort, "sp", 1883, "loraserver port number.")
+        flag.IntVar(&cfg.MQTTLoraPort, "lora-server-port", 1883, "loraserver port number.")
+
+        flag.StringVar(&cfg.MQTTMainfluxHost, "m", "0.0.0.0", "MainfluxDB address.")
+        flag.StringVar(&cfg.MQTTMainfluxHost, "mainflux-server", "0.0.0.0", "MainfluxDB address.")
+        flag.IntVar(&cfg.MQTTMainfluxPort, "mp", 1883, "MainfluxDB port number.")
+        flag.IntVar(&cfg.MQTTMainfluxPort, "mainflux-server-port", 1883, "MainfluxDB port number.")
+
         flag.StringVar(&cfg.LogFile, "l", "", "File to store logging output.")
         flag.StringVar(&cfg.LogFile, "log", "", "File to store logging output.")
         flag.BoolVar(&showVersion, "version", false, "Print version information.")
